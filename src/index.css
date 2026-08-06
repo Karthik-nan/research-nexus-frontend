@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+
+body {
+
+  margin: 0;
+
+  font-family:
+    Inter,
+    Arial,
+    sans-serif;
+
+  background: #f8fafc;
+
+}
+
+
+#root {
+
+  min-height: 100vh;
+
+}
