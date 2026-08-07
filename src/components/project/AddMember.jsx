@@ -4,19 +4,18 @@ import axios from "axios";
 
 function AddMember({ projectId, onMemberAdded }) {
 
-
-    const [memberEmail,setMemberEmail] = useState("");
-
-    const [memberRole,setMemberRole] = useState("MEMBER");
-
+    const [email, setEmail] = useState("");
+    const [role, setRole] = useState("MEMBER");
+    const [message, setMessage] = useState("");
 
 
+    const addMember = async (e) => {
 
+        e.preventDefault();
 
-    const addMember = async()=>{
+        try {
 
-
-        try{
+            const token = localStorage.getItem("token");
 
 
             await axios.post(
@@ -24,58 +23,40 @@ function AddMember({ projectId, onMemberAdded }) {
                 `http://localhost:8080/api/projects/${projectId}/members`,
 
                 {
-
-                    email: memberEmail,
-
-                    role: memberRole
-
+                    email: email,
+                    role: role
                 },
 
                 {
-
-                    headers:{
-
-                        Authorization:
-                        `Bearer ${localStorage.getItem("token")}`
-
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
-
                 }
 
             );
 
 
+            setMessage("Member added successfully ✅");
 
-            alert("Member added");
+            setEmail("");
 
-
-
-            setMemberEmail("");
-
-
-
-            onMemberAdded();
+            if(onMemberAdded){
+                onMemberAdded();
+            }
 
 
         }
         catch(error){
 
+            console.error(error);
 
-            alert(
-
-                error.response?.data ||
-                "Failed"
-
+            setMessage(
+                error.response?.data || "Failed to add member"
             );
-
 
         }
 
-
     };
-
-
-
 
 
     return (
@@ -83,90 +64,72 @@ function AddMember({ projectId, onMemberAdded }) {
         <div className="
             bg-white
             rounded-xl
-            shadow-md
+            shadow
             p-6
-            mb-8
+            mt-6
         ">
-
 
 
             <h2 className="
                 text-2xl
                 font-bold
-                mb-5
+                mb-4
             ">
-
-                ➕ Add Member
-
+                Add Member
             </h2>
 
 
 
-
-
-            <div className="
-                flex
-                gap-3
-                flex-wrap
-            ">
-
+            <form onSubmit={addMember}>
 
 
                 <input
 
+                    type="email"
+
+                    placeholder="Enter member email"
+
+                    value={email}
+
+                    onChange={(e)=>setEmail(e.target.value)}
+
                     className="
                         border
-                        rounded-lg
                         p-3
-                        flex-1
+                        rounded-lg
+                        w-full
+                        mb-3
                     "
 
-                    placeholder="Member email"
-
-                    value={memberEmail}
-
-                    onChange={
-                        (e)=>
-                        setMemberEmail(e.target.value)
-                    }
+                    required
 
                 />
 
 
 
-
-
-
                 <select
 
-                    value={memberRole}
+                    value={role}
 
-                    onChange={
-                        (e)=>
-                        setMemberRole(e.target.value)
-                    }
+                    onChange={(e)=>setRole(e.target.value)}
 
                     className="
                         border
-                        rounded-lg
                         p-3
+                        rounded-lg
+                        w-full
+                        mb-3
                     "
 
                 >
 
-
                     <option value="MEMBER">
-
-                        MEMBER
-
+                        Member
                     </option>
 
 
-
-                    <option value="ADMIN">
-
-                        ADMIN
-
+                    <option value="OWNER">
+                        Owner
                     </option>
 
 
@@ -174,20 +137,16 @@ function AddMember({ projectId, onMemberAdded }) {
 
 
 
-
-
-
                 <button
 
-                    onClick={addMember}
+                    type="submit"
 
                     className="
-                        bg-green-600
+                        bg-blue-600
                         text-white
-                        px-6
-                        py-3
+                        px-5
+                        py-2
                         rounded-lg
-                        hover:bg-green-700
                     "
 
                 >
@@ -197,8 +156,22 @@ function AddMember({ projectId, onMemberAdded }) {
                 </button>
 
 
+            </form>
 
-            </div>
+
+
+            {
+                message && (
+
+                    <p className="
+                        mt-3
+                        text-gray-700
+                    ">
+                        {message}
+                    </p>
+
+                )
+            }
 
 
 

@@ -23,7 +23,7 @@ function ProjectDetails() {
 
     const [documents, setDocuments] = useState([]);
 
-    const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
 
 
@@ -36,14 +36,41 @@ function ProjectDetails() {
 
 
 
+
     useEffect(() => {
 
-        fetchProject();
-        fetchMembers();
-        fetchDocuments();
-        fetchCurrentUser();
+        if(id){
 
-    }, []);
+            loadProjectData();
+
+        }
+
+    }, [id]);
+
+
+
+
+
+    const loadProjectData = async()=>{
+
+        await Promise.all([
+
+            fetchProject(),
+
+            fetchMembers(),
+
+            fetchDocuments()
+
+            
+
+        ]);
+
+
+        setLoading(false);
+
+    };
+
+
 
 
 
@@ -53,113 +80,12 @@ function ProjectDetails() {
 
         try {
 
+            console.log("Project ID:", id);
+
+
             const response = await axios.get(
 
                 `http://localhost:8080/api/projects/${id}`,
-
-                {
-                    headers: {
-                        Authorization: `Bearer ${getToken()}`
-                    }
-                }
-
-            );
-
-
-            setProject(response.data);
-
-
-        }
-        catch(error) {
-
-            console.log(error);
-
-        }
-
-    };
-
-
-
-
-
-    const fetchMembers = async () => {
-
-        try {
-
-
-            const response = await axios.get(
-
-                `http://localhost:8080/api/projects/${id}/members`,
-
-                {
-                    headers: {
-                        Authorization: `Bearer ${getToken()}`
-                    }
-                }
-
-            );
-
-
-            setMembers(response.data);
-
-
-        }
-        catch(error) {
-
-            console.log(error);
-
-        }
-
-    };
-
-
-
-
-
-
-    const fetchDocuments = async () => {
-
-        try {
-
-
-            const response = await axios.get(
-
-                `http://localhost:8080/api/documents/project/${id}`,
-
-                {
-                    headers: {
-                        Authorization: `Bearer ${getToken()}`
-                    }
-                }
-
-            );
-
-
-            setDocuments(response.data);
-
-
-        }
-        catch(error) {
-
-            console.log(error);
-
-        }
-
-    };
-
-
-
-
-
-
-    const fetchCurrentUser = async () => {
-
-        try {
-
-
-            const response = await axios.get(
-
-                "http://localhost:8080/api/users/me",
 
                 {
                     headers:{
@@ -170,13 +96,19 @@ function ProjectDetails() {
             );
 
 
-            setCurrentUser(response.data);
+            console.log("Project Response:", response.data);
+
+
+            setProject(response.data);
 
 
         }
         catch(error){
 
-            console.log(error);
+            console.log(
+                "Project Error:",
+                error.response?.data || error.message
+            );
 
         }
 
@@ -187,10 +119,90 @@ function ProjectDetails() {
 
 
 
+
+
+    const fetchMembers = async()=>{
+
+
+        try{
+
+
+            const response = await axios.get(
+
+                `http://localhost:8080/api/projects/${id}/members`,
+
+                {
+                    headers:{
+                        Authorization:`Bearer ${getToken()}`
+                    }
+                }
+
+            );
+
+
+            setMembers(response.data);
+
+
+        }
+        catch(error){
+
+            console.log(
+                "Members Error:",
+                error.response?.data || error.message
+            );
+
+        }
+
+
+    };
+
+
+
+
+
+
+
+
+    const fetchDocuments = async()=>{
+
+
+        try{
+
+
+            const response = await axios.get(
+
+                `http://localhost:8080/api/documents/project/${id}`,
+
+                {
+                    headers:{
+                        Authorization:`Bearer ${getToken()}`
+                    }
+                }
+
+            );
+
+
+            setDocuments(response.data);
+
+
+        }
+        catch(error){
+
+            console.log(
+                "Documents Error:",
+                error.response?.data || error.message
+            );
+
+        }
+
+
+    };
+
+
     const removeMember = async(userId)=>{
 
 
-        try {
+        try{
 
 
             await axios.delete(
@@ -212,7 +224,10 @@ function ProjectDetails() {
         }
         catch(error){
 
-            console.log(error);
+            console.log(
+                "Remove Member Error:",
+                error.response?.data || error.message
+            );
 
         }
 
@@ -224,11 +239,62 @@ function ProjectDetails() {
 
 
 
-    if(!project){
 
-        return <h2>Loading...</h2>;
+
+    if(loading){
+
+        return (
+
+            <div className="p-8 text-xl font-semibold">
+
+                Loading project...
+
+            </div>
+
+        );
 
     }
+
+
+
+
+
+
+
+    if(!project){
+
+    return (
+
+        <div className="p-8">
+
+            <h2 className="text-xl font-bold">
+
+                Project not found
+
+            </h2>
+
+
+            <button
+
+                onClick={()=>navigate("/dashboard")}
+
+                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+
+            >
+
+                Go Back
+
+            </button>
+
+        </div>
+
+    );
+
+}
+
+
+
+
 
 
 
@@ -244,10 +310,10 @@ function ProjectDetails() {
                 onClick={()=>navigate("/dashboard")}
 
                 className="
-                bg-gray-200
-                px-4
-                py-2
-                rounded-lg
+                    bg-gray-200
+                    px-4
+                    py-2
+                    rounded-lg
                 "
 
             >
@@ -259,65 +325,43 @@ function ProjectDetails() {
 
 
 
+         <ProjectHeader
+    project={project}
+/>
 
-            <ProjectHeader
+{project?.myRole === "OWNER" && (
+    <UploadDocument
+        projectId={id}
+        onUploadSuccess={fetchDocuments}
+    />
+)}
 
-                project={project}
-
-            />
-
-
-
-
-
-            <UploadDocument
-
-                projectId={id}
-
-                onUploadSuccess={fetchDocuments}
-
-            />
+<DocumentList
+    documents={documents}
+/>
 
 
+           {
+           project?.myRole === "OWNER" && (
+    <AddMember
+        projectId={id}
+        onMemberAdded={fetchMembers}
+    />
+              )
 
-
-
-            <DocumentList
-
-                documents={documents}
-
-            />
+           }
 
 
 
 
 
-            {
-                currentUser?.role === "OWNER" &&
-
-                <AddMember
-
-                    projectId={id}
-
-                    onMemberAdded={fetchMembers}
-
-                />
-
-            }
 
 
-
-
-
-            <MemberList
-
-                members={members}
-
-                currentUser={currentUser}
-
-                removeMember={removeMember}
-
-            />
+         <MemberList
+    members={members}
+    myRole={project?.myRole}
+    removeMember={removeMember}
+          />
 
 
 
