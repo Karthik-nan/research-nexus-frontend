@@ -8,6 +8,7 @@ import DocumentList from "../components/project/DocumentList";
 import UploadDocument from "../components/project/UploadDocument";
 import MemberList from "../components/project/MemberList";
 import AddMember from "../components/project/AddMember";
+import ActivityList from "../components/activity/ActivityList";
 
 function ProjectDetails() {
 
@@ -18,10 +19,6 @@ function ProjectDetails() {
     const [members, setMembers] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    // =========================
-    // EDIT PROJECT STATE
-    // =========================
 
     const [showEditForm, setShowEditForm] = useState(false);
 
@@ -163,14 +160,14 @@ function ProjectDetails() {
     };
 
     // =========================
-    // HANDLE DOCUMENT DELETE
+    // DOCUMENT DELETED
     // =========================
 
     const handleDocumentDelete = (documentId) => {
 
         setDocuments(prevDocuments =>
             prevDocuments.filter(
-                doc => doc.id !== documentId
+                document => document.id !== documentId
             )
         );
 
@@ -193,7 +190,7 @@ function ProjectDetails() {
                 }
             );
 
-            fetchMembers();
+            await fetchMembers();
 
         } catch (error) {
 
@@ -439,6 +436,24 @@ function ProjectDetails() {
                 myRole={project.myRole}
                 removeMember={removeMember}
             />
+
+
+            {/* =========================
+                PROJECT ACTIVITY
+            ========================= */}
+
+            <div className="
+                mt-10
+                border-t
+                border-gray-200
+                pt-8
+            ">
+
+                <ActivityList
+                    projectId={id}
+                />
+
+            </div>
 
         </div>
 
