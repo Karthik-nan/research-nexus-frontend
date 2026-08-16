@@ -1,8 +1,6 @@
 import React from "react";
 
-
-function ProjectHeader({ project }) {
-
+function ProjectHeader({ project, onEdit }) {
 
     return (
 
@@ -15,31 +13,69 @@ function ProjectHeader({ project }) {
             mb-8
         ">
 
+            {/* PROJECT TITLE + EDIT BUTTON */}
 
-            <h1 className="
-                text-4xl
-                font-bold
-                text-slate-800
+            <div className="
+                flex
+                justify-between
+                items-center
             ">
 
-                🚀 {project.name}
+                <h1 className="
+                    text-4xl
+                    font-bold
+                    text-slate-800
+                ">
 
-            </h1>
+                    🚀 {project.name}
+
+                </h1>
 
 
+                {/* EDIT BUTTON */}
 
-            <p className="mt-4 text-gray-600">
+                {project.myRole === "OWNER" && (
+
+                    <button
+                        onClick={onEdit}
+                        className="
+                            bg-blue-600
+                            hover:bg-blue-700
+                            text-white
+                            px-5
+                            py-2
+                            rounded-lg
+                            font-semibold
+                            transition
+                        "
+                    >
+
+                        ✏️ Edit Project
+
+                    </button>
+
+                )}
+
+            </div>
+
+
+            {/* DESCRIPTION */}
+
+            <p className="
+                mt-4
+                text-gray-600
+            ">
 
                 <b>Description:</b>
 
-                <br/>
+                <br />
 
                 {project.description}
 
             </p>
 
 
-
+            {/* CREATED BY */}
 
             <p className="mt-4">
 
@@ -51,12 +87,10 @@ function ProjectHeader({ project }) {
 
             </p>
 
-
         </div>
 
     );
 
 }
-
 
 export default ProjectHeader;

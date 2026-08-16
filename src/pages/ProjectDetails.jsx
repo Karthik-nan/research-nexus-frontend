@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
 import ProjectHeader from "../components/project/ProjectHeader";
+import EditProject from "../components/project/EditProject";
 import DocumentList from "../components/project/DocumentList";
 import UploadDocument from "../components/project/UploadDocument";
 import MemberList from "../components/project/MemberList";
@@ -17,6 +18,12 @@ function ProjectDetails() {
     const [members, setMembers] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // =========================
+    // EDIT PROJECT STATE
+    // =========================
+
+    const [showEditForm, setShowEditForm] = useState(false);
 
     // =========================
     // GET TOKEN
@@ -40,6 +47,8 @@ function ProjectDetails() {
 
     const loadProjectData = async () => {
 
+        setLoading(true);
+
         await Promise.all([
             fetchProject(),
             fetchMembers(),
@@ -56,8 +65,6 @@ function ProjectDetails() {
     const fetchProject = async () => {
 
         try {
-
-            console.log("Project ID:", id);
 
             const response = await axios.get(
                 `http://localhost:8080/api/projects/${id}`,
@@ -144,6 +151,18 @@ function ProjectDetails() {
     };
 
     // =========================
+    // PROJECT UPDATED
+    // =========================
+
+    const handleProjectUpdated = (updatedProject) => {
+
+        setProject(updatedProject);
+
+        setShowEditForm(false);
+
+    };
+
+    // =========================
     // HANDLE DOCUMENT DELETE
     // =========================
 
@@ -183,6 +202,55 @@ function ProjectDetails() {
                 error.response?.data || error.message
             );
 
+            alert(
+                error.response?.data ||
+                "Failed to remove member"
+            );
+
+        }
+    };
+
+    // =========================
+    // DELETE PROJECT
+    // =========================
+
+    const deleteProject = async () => {
+
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this project? This action cannot be undone."
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+
+            await axios.delete(
+                `http://localhost:8080/api/projects/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${getToken()}`
+                    }
+                }
+            );
+
+            alert("Project deleted successfully");
+
+            navigate("/dashboard");
+
+        } catch (error) {
+
+            console.log(
+                "Delete Project Error:",
+                error.response?.data || error.message
+            );
+
+            alert(
+                error.response?.data ||
+                "Failed to delete project"
+            );
+
         }
     };
 
@@ -219,10 +287,11 @@ function ProjectDetails() {
                     className="
                         mt-4
                         bg-blue-600
+                        hover:bg-blue-700
                         text-white
                         px-4
                         py-2
-                        rounded
+                        rounded-lg
                     "
                 >
                     Go Back
@@ -242,29 +311,91 @@ function ProjectDetails() {
 
         <div className="p-8">
 
-            {/* BACK BUTTON */}
+            {/* =========================
+                BACK BUTTON
+            ========================= */}
 
             <button
                 onClick={() => navigate("/dashboard")}
                 className="
                     bg-gray-200
+                    hover:bg-gray-300
                     px-4
                     py-2
                     rounded-lg
+                    mb-4
                 "
             >
                 ← Back
             </button>
 
-            {/* PROJECT HEADER */}
+
+            {/* =========================
+                PROJECT HEADER
+            ========================= */}
 
             <ProjectHeader
                 project={project}
+                onEdit={() => setShowEditForm(true)}
             />
 
-            {/* UPLOAD DOCUMENT */}
 
-            {project?.myRole === "OWNER" && (
+            {/* =========================
+                EDIT PROJECT
+            ========================= */}
+
+            {showEditForm &&
+                project.myRole === "OWNER" && (
+
+                <EditProject
+                    project={project}
+                    onUpdated={handleProjectUpdated}
+                    onCancel={() => setShowEditForm(false)}
+                />
+
+            )}
+
+
+            {/* =========================
+                DELETE PROJECT
+            ========================= */}
+
+            {project.myRole === "OWNER" && (
+
+                <div className="
+                    flex
+                    justify-end
+                    mt-3
+                    mb-6
+                ">
+
+                    <button
+                        onClick={deleteProject}
+                        className="
+                            bg-red-600
+                            hover:bg-red-700
+                            text-white
+                            px-5
+                            py-2
+                            rounded-lg
+                            font-semibold
+                            shadow-sm
+                            transition
+                        "
+                    >
+                        🗑️ Delete Project
+                    </button>
+
+                </div>
+
+            )}
+
+
+            {/* =========================
+                UPLOAD DOCUMENT
+            ========================= */}
+
+            {project.myRole === "OWNER" && (
 
                 <UploadDocument
                     projectId={id}
@@ -273,17 +404,23 @@ function ProjectDetails() {
 
             )}
 
-            {/* DOCUMENT LIST */}
+
+            {/* =========================
+                DOCUMENT LIST
+            ========================= */}
 
             <DocumentList
                 documents={documents}
-                myRole={project?.myRole}
+                myRole={project.myRole}
                 onDelete={handleDocumentDelete}
             />
 
-            {/* ADD MEMBER */}
 
-            {project?.myRole === "OWNER" && (
+            {/* =========================
+                ADD MEMBER
+            ========================= */}
+
+            {project.myRole === "OWNER" && (
 
                 <AddMember
                     projectId={id}
@@ -292,11 +429,14 @@ function ProjectDetails() {
 
             )}
 
-            {/* MEMBER LIST */}
+
+            {/* =========================
+                MEMBER LIST
+            ========================= */}
 
             <MemberList
                 members={members}
-                myRole={project?.myRole}
+                myRole={project.myRole}
                 removeMember={removeMember}
             />
 
