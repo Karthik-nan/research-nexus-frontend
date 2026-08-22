@@ -1,3 +1,4 @@
+import API_URL from '../config';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -33,7 +34,7 @@ function Profile() {
 
             const response = await axios.get(
 
-                "http://localhost:8080/api/users/me",
+                `${API_URL}/api/users/me`,
 
                 {
 
@@ -277,3 +278,5 @@ function Profile() {
 
 
 export default Profile;
+
+

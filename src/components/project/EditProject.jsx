@@ -1,3 +1,4 @@
+import API_URL from '../../config';
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -28,7 +29,7 @@ function EditProject({ project, onUpdated, onCancel }) {
             setLoading(true);
 
             const response = await axios.put(
-                `http://localhost:8080/api/projects/${project.id}`,
+                `${API_URL}/api/projects/${project.id}`,
                 {
                     name: name.trim(),
                     description: description.trim()
@@ -201,3 +202,5 @@ function EditProject({ project, onUpdated, onCancel }) {
 }
 
 export default EditProject;
+
+

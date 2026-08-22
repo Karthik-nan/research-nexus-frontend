@@ -1,3 +1,4 @@
+import API_URL from '../config';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
@@ -64,7 +65,7 @@ function ProjectDetails() {
         try {
 
             const response = await axios.get(
-                `http://localhost:8080/api/projects/${id}`,
+                `${API_URL}/api/projects/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${getToken()}`
@@ -98,7 +99,7 @@ function ProjectDetails() {
         try {
 
             const response = await axios.get(
-                `http://localhost:8080/api/projects/${id}/members`,
+                `${API_URL}/api/projects/${id}/members`,
                 {
                     headers: {
                         Authorization: `Bearer ${getToken()}`
@@ -127,7 +128,7 @@ function ProjectDetails() {
         try {
 
             const response = await axios.get(
-                `http://localhost:8080/api/documents/project/${id}`,
+                `${API_URL}/api/documents/project/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${getToken()}`
@@ -182,7 +183,7 @@ function ProjectDetails() {
         try {
 
             await axios.delete(
-                `http://localhost:8080/api/projects/${id}/members/${userId}`,
+                `${API_URL}/api/projects/${id}/members/${userId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${getToken()}`
@@ -224,7 +225,7 @@ function ProjectDetails() {
         try {
 
             await axios.delete(
-                `http://localhost:8080/api/projects/${id}`,
+                `${API_URL}/api/projects/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${getToken()}`
@@ -462,3 +463,5 @@ function ProjectDetails() {
 }
 
 export default ProjectDetails;
+
+

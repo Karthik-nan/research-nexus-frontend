@@ -75,3 +75,4 @@ function ActivityItem({ activity }) {
 }
 
 export default ActivityItem;
+

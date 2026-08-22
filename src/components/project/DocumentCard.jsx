@@ -1,3 +1,4 @@
+import API_URL from '../../config';
 import React from "react";
 import axios from "axios";
 import Comments from "./Comments";
@@ -9,7 +10,7 @@ function DocumentCard({ document: doc, onDelete }) {
         try {
 
             const response = await axios.get(
-                `http://localhost:8080/api/documents/download/${doc.id}`,
+                `${API_URL}/api/documents/download/${doc.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -64,7 +65,7 @@ function DocumentCard({ document: doc, onDelete }) {
         try {
 
             await axios.delete(
-                `http://localhost:8080/api/documents/${doc.id}`,
+                `${API_URL}/api/documents/${doc.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -231,3 +232,5 @@ function DocumentCard({ document: doc, onDelete }) {
 }
 
 export default DocumentCard;
+
+

@@ -1,3 +1,4 @@
+import API_URL from '../config';
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +24,7 @@ function Login() {
 
       const response = await axios.post(
 
-        "http://localhost:8080/api/users/login",
+        `${API_URL}/api/users/login`,
 
         {
           email,
@@ -272,3 +273,5 @@ function Login() {
 
 
 export default Login;
+
+

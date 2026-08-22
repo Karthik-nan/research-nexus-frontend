@@ -94,3 +94,4 @@ function ProjectHeader({ project, onEdit }) {
 }
 
 export default ProjectHeader;
+

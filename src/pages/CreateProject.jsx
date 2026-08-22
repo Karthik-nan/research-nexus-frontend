@@ -1,3 +1,4 @@
+import API_URL from '../config';
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +45,7 @@ const token = localStorage.getItem("token");
 
 await axios.post(
 
-"http://localhost:8080/api/projects",
+`${API_URL}/api/projects`,
 
 {
 
@@ -284,3 +285,5 @@ Cancel
 
 
 export default CreateProject;
+
+

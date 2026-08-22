@@ -39,3 +39,4 @@ function StatCard({ title, value, icon, color }) {
 }
 
 export default StatCard;
+

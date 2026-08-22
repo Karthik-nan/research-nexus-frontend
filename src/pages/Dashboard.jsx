@@ -1,3 +1,4 @@
+import API_URL from '../config';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +29,7 @@ function Dashboard() {
             const token = localStorage.getItem("token");
 
             const response = await axios.get(
-                "http://localhost:8080/api/projects/my",
+                `${API_URL}/api/projects/my`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -54,7 +55,7 @@ function Dashboard() {
             const token = localStorage.getItem("token");
 
             const response = await axios.get(
-                "http://localhost:8080/api/projects/explore",
+                `${API_URL}/api/projects/explore`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -212,3 +213,5 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+

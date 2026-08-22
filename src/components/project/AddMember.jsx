@@ -1,3 +1,4 @@
+import API_URL from '../../config';
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -20,7 +21,7 @@ function AddMember({ projectId, onMemberAdded }) {
 
             await axios.post(
 
-                `http://localhost:8080/api/projects/${projectId}/members`,
+                `${API_URL}/api/projects/${projectId}/members`,
 
                 {
                     email: email,
@@ -183,3 +184,5 @@ function AddMember({ projectId, onMemberAdded }) {
 
 
 export default AddMember;
+
+

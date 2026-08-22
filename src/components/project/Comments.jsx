@@ -1,3 +1,4 @@
+import API_URL from '../../config';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -17,7 +18,7 @@ function Comments({ documentId }) {
         try {
 
             const response = await axios.get(
-                `http://localhost:8080/api/comments/document/${documentId}`,
+                `${API_URL}/api/comments/document/${documentId}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -42,7 +43,7 @@ function Comments({ documentId }) {
         try {
 
             await axios.post(
-                `http://localhost:8080/api/comments/document/${documentId}`,
+                `${API_URL}/api/comments/document/${documentId}`,
                 {
                     content: content
                 },
@@ -142,3 +143,5 @@ function Comments({ documentId }) {
 }
 
 export default Comments;
+
+

@@ -1,3 +1,4 @@
+import API_URL from '../../config';
 import React, { useEffect, useState } from "react";
 import ActivityItem from "./ActivityItem";
 
@@ -20,7 +21,7 @@ function ActivityList({ projectId }) {
                 const token = localStorage.getItem("token");
 
                 const response = await fetch(
-                    `http://localhost:8080/api/activities/project/${projectId}`,
+                    `${API_URL}/api/activities/project/${projectId}`,
                     {
                         method: "GET",
                         headers: {
@@ -291,3 +292,5 @@ function ActivityList({ projectId }) {
 }
 
 export default ActivityList;
+
+

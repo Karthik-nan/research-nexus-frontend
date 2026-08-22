@@ -1,3 +1,4 @@
+import API_URL from '../../config';
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -63,7 +64,7 @@ function UploadDocument({ projectId, onUploadSuccess }) {
 
             await axios.post(
 
-                "http://localhost:8080/api/documents/upload",
+                `${API_URL}/api/documents/upload`,
 
                 formData,
 
@@ -238,3 +239,5 @@ function UploadDocument({ projectId, onUploadSuccess }) {
 
 
 export default UploadDocument;
+
+
